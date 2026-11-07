@@ -132,3 +132,7 @@ Everything is set from **Settings** (⌘,). The interface is in Korean.
 ## Status
 
 Naru is being rebuilt on Tauri + React + Rust from an earlier fork, and it is the terminal its author uses every day. Expect rough edges and Korean-only text in the interface.
+
+## License
+
+Naru is licensed under the [GNU Affero General Public License v3.0](LICENSE). Parts of it are ported from Warp's AGPL-licensed terminal app; [NOTICE](NOTICE) lists them along with the bundled MaruBuri font (SIL Open Font License 1.1).
