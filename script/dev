@@ -1,0 +1,12 @@
+#!/bin/zsh
+# Runs naru-d under a throwaway HOME and the screen with Vite.
+# Never point this at the real HOME: the naru CLI finds ~/.naru through HOME, and a daemon there
+# would replace the token and socket of the Naru that is running.
+set -euo pipefail
+root=${0:A:h:h}
+dev_home=${NARU_DEV_HOME:-/tmp/naru-dev-home}
+source "$root/script/lib.zsh"
+start_daemon "$dev_home"
+trap 'kill $daemon_pid 2>/dev/null' EXIT
+print "VITE_NARU_WS=$daemon_ws" > "$root/web/.env.development.local"
+cd "$root/web" && /opt/homebrew/bin/pnpm dev

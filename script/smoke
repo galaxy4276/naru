@@ -1,0 +1,36 @@
+#!/bin/zsh
+# Gate for phases 1-2 with a fake HOME: screens leave and come back to running panes, OSC 777
+# reaches screens, and an agent's conversation comes back after kill -9, after a normal stop,
+# and not at all once the agent exited.
+set -euo pipefail
+# zsh skips the EXIT trap when errexit fires inside a function, so each step exits explicitly.
+root=${0:A:h:h}
+home=$(mktemp -d /tmp/naru-smoke.XXXXXX)
+source "$root/script/lib.zsh"
+mkdir -p "$home/bin"
+cat > "$home/bin/claude" <<'AGENT'
+#!/bin/sh
+echo "fake-claude $*"
+id=11111111-1111-4111-8111-111111111111
+emit() { printf '\033]777;notify;warp://cli-agent;%s\007' "$1"; }
+if [ "$1" != "--resume" ]; then
+  emit '{"v":1,"agent":"claude","event":"prompt_submit","session_id":"'$id'","query":"hello"}'
+  emit '{"v":1,"agent":"claude","event":"stop","session_id":"'$id'","query":"hello","response":"hi"}'
+fi
+read line
+AGENT
+chmod +x "$home/bin/claude"
+smoke() { /opt/homebrew/bin/node "$root/script/smoke.mjs" "$daemon_ws" "$1" "$home"; }
+restart() { kill -$1 $daemon_pid; wait $daemon_pid 2>/dev/null || true; start_daemon "$home"; }
+
+start_daemon "$home"
+trap 'kill $daemon_pid 2>/dev/null; [[ -n ${NARU_SMOKE_KEEP:-} ]] || rm -rf "$home"' EXIT
+smoke engine || exit 1
+smoke agent || exit 1
+restart KILL || exit 1
+smoke resumed || exit 1
+restart TERM || exit 1
+smoke resumed-again || exit 1
+restart KILL || exit 1
+smoke shell || exit 1
+echo "smoke ok"

@@ -1,0 +1,49 @@
+#!/bin/zsh
+# Gate for phase 3 with a fake HOME: the real naru helper drives the daemon. Agents spawn
+# children, write letters, read and type into each other's panes, sleep and wake; files reach the
+# document lane; a silent interrupted turn ends; parents survive kill -9.
+set -euo pipefail
+# zsh skips the EXIT trap when errexit fires inside a function, so each step exits explicitly.
+root=${0:A:h:h}
+home=$(mktemp -d /tmp/naru-team.XXXXXX)
+source "$root/script/lib.zsh"
+mkdir -p "$home/bin" "$home/.local/bin"
+ln -s "$root/../warp/script/naru/naru" "$home/.local/bin/naru"
+print -r -- 'export PATH=$HOME/bin:$HOME/.local/bin:$PATH' > "$home/.zshenv"
+cat > "$home/bin/claude" <<'AGENT'
+#!/bin/sh
+# A stand-in agent: reports its session over the Warp plugin protocol, answers each line it
+# reads, runs a line starting with ! as an agent's shell tool would, and exits on /exit.
+id=$(printf 'aaaaaaaa-0000-4000-8000-%012d' $$)
+[ "${1-}" = "--resume" ] && id=$2
+emit() { printf '\033]777;notify;warp://cli-agent;%s\007' "$1"; }
+turn() {
+  emit '{"v":1,"agent":"claude","event":"prompt_submit","session_id":"'$id'","query":"'$1'"}'
+  emit '{"v":1,"agent":"claude","event":"stop","session_id":"'$id'","query":"'$1'","response":"ok"}'
+}
+echo "fake-claude $* id=$id"
+turn start
+while IFS= read -r line; do
+  case $line in
+    /exit) exit 0 ;;
+    interrupt)
+      emit '{"v":1,"agent":"claude","event":"prompt_submit","session_id":"'$id'","query":"interrupt"}'
+      mkdir -p "$HOME/.claude/projects/-fake"
+      printf '%s\n' '{"type":"user","message":{"content":"x"}}' \
+        '{"type":"user","message":{"content":[{"type":"text","text":"[Request interrupted by user]"}]}}' \
+        > "$HOME/.claude/projects/-fake/$id.jsonl" ;;
+    !*) sh -c "${line#!}" ;;
+    *) echo "got: $line"; turn "$(printf %s "$line" | tr -dc 'a-z0-9-')" ;;
+  esac
+done
+AGENT
+chmod +x "$home/bin/claude"
+team() { /opt/homebrew/bin/node "$root/script/team-smoke.mjs" "$daemon_ws" "$1" "$home"; }
+
+start_daemon "$home"
+trap 'kill $daemon_pid 2>/dev/null; [[ -n ${NARU_SMOKE_KEEP:-} ]] || rm -rf "$home"' EXIT
+team letters || exit 1
+kill -KILL $daemon_pid; wait $daemon_pid 2>/dev/null || true
+start_daemon "$home" || exit 1
+team restored || exit 1
+echo "team smoke ok"
