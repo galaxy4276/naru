@@ -1,0 +1,10 @@
+target/
+node_modules/
+dist/
+*.local
+.DS_Store
+
+# Internal planning notes and agent instructions stay local.
+designs/
+CLAUDE.md
+*.tsbuildinfo
