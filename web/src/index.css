@@ -1,0 +1,157 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+@import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* shadcn/ui zinc on a Toss-style gray canvas: borderless white cards. Only "your turn" and errors
+   have color; every other state is black or gray. */
+:root {
+  --radius: 0.5rem;
+  --background: #ffffff;
+  --foreground: #09090b;
+  --card: #ffffff;
+  --card-foreground: #09090b;
+  --popover: #ffffff;
+  --popover-foreground: #09090b;
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --destructive: #dc2626;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #a1a1aa;
+  --canvas: #f2f4f6;
+  --turn: #ea580c;
+  --wait: #a1a1aa;
+  --turn-soft: #fff7ed;
+}
+
+/* shadcn zinc dark on a black canvas: cards one step lighter than the canvas. */
+.dark {
+  --background: #18181b;
+  --foreground: #fafafa;
+  --card: #18181b;
+  --card-foreground: #fafafa;
+  --popover: #18181b;
+  --popover-foreground: #fafafa;
+  --primary: #fafafa;
+  --primary-foreground: #18181b;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
+  --destructive: #ef4444;
+  --border: #27272a;
+  --input: #3f3f46;
+  --ring: #71717a;
+  --canvas: #09090b;
+  --turn: #f97316;
+  --wait: #71717a;
+  --turn-soft: #431407;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif;
+  --font-mono: "JetBrains Mono", "D2Coding", Menlo, monospace;
+  --font-book: MaruBuri, "Apple SD Gothic Neo", serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-canvas: var(--canvas);
+  --color-turn: var(--turn);
+  --color-turn-soft: var(--turn-soft);
+  --color-wait: var(--wait);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    accent-color: var(--primary);
+  }
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
+  body {
+    @apply m-0 overflow-hidden bg-canvas font-sans text-[13px] text-foreground antialiased;
+    word-break: keep-all;
+  }
+}
+
+/* Typography wraps inline code in literal backticks; documents show it as a tinted chip instead. */
+.prose :not(pre) > code {
+  border-radius: 4px;
+  background: var(--muted);
+  padding: 0 4px;
+  font-weight: 500;
+}
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
+}
+
+/* A slow float for buttons that hover over the work, such as the way back to the 서재. */
+@keyframes naru-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -3px;
+  }
+}
+
+/* 마루 부리 (OFL-1.1, see assets/fonts/MaruBuri-OFL.txt) for books read in the 서재. */
+@font-face {
+  font-family: MaruBuri;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/MaruBuri-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: MaruBuri;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./assets/fonts/MaruBuri-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: MaruBuri;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/fonts/MaruBuri-Bold.woff2") format("woff2");
+}
+
+/* Underlines in a translated page, a highlighter band in both themes. */
+::highlight(naru-marks) {
+  background-color: rgb(250 204 21 / 0.38);
+}
