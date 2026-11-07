@@ -1,0 +1,26 @@
+Naru
+Copyright (C) 2026 galaxy4276
+
+Naru is free software: you can redistribute it and/or modify it under the terms of the GNU Affero
+General Public License as published by the Free Software Foundation, version 3. See LICENSE.
+
+Naru is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+General Public License for more details.
+
+Third-party material
+--------------------
+
+Warp
+  Copyright (C) 2020-2026 Denver Technologies, Inc.
+  Licensed under the GNU Affero General Public License v3.
+  https://github.com/warpdotdev/warp
+  Parts of Naru are ported from a fork of Warp's terminal app, among them:
+    daemon/src/agent.rs        from app/src/terminal/cli_agent.rs
+    daemon/src/session.rs      from app/src/terminal/cli_agent_sessions/mod.rs
+    web/src/ui/agentIcons.ts   path data from app/assets/bundled/svg
+    web/src/ui/overviewGraph.ts  placement ported from the fork's overview graph
+
+MaruBuri font (web/src/assets/fonts/MaruBuri-*.woff2)
+  From NAVER (네이버 글꼴모음), https://hangeul.naver.com
+  Licensed under the SIL Open Font License 1.1; see web/src/assets/fonts/MaruBuri-OFL.txt.
