@@ -1,0 +1,54 @@
+{
+  "data": [
+    {
+      "id": "120200000000000001",
+      "name": "앱 설치 · 대학생",
+      "status": "ACTIVE",
+      "effective_status": "ACTIVE",
+      "objective": "OUTCOME_APP_PROMOTION",
+      "daily_budget": "30000",
+      "lifetime_budget": "0",
+      "insights": {
+        "data": [
+          {
+            "spend": "182000",
+            "impressions": "51234",
+            "clicks": "812",
+            "ctr": "1.584885",
+            "cpc": "224.137931",
+            "actions": [
+              { "action_type": "link_click", "value": "640" },
+              { "action_type": "mobile_app_install", "value": "97" }
+            ],
+            "cost_per_action_type": [
+              { "action_type": "link_click", "value": "284.375" },
+              { "action_type": "mobile_app_install", "value": "1876.29" }
+            ],
+            "date_start": "2026-10-31",
+            "date_stop": "2026-11-06"
+          }
+        ],
+        "paging": { "cursors": { "before": "MAZDZD", "after": "MAZDZD" } }
+      }
+    },
+    {
+      "id": "120200000000000002",
+      "name": "리타기팅",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "objective": "OUTCOME_SALES",
+      "daily_budget": "0",
+      "lifetime_budget": "0"
+    },
+    {
+      "id": "120200000000000003",
+      "name": "브랜드 인지도",
+      "status": "ACTIVE",
+      "effective_status": "ACTIVE",
+      "objective": "OUTCOME_AWARENESS",
+      "lifetime_budget": "1000000",
+      "insights": { "data": [{ "spend": "12000", "impressions": "90000" }] }
+    }
+  ],
+  "paging": { "cursors": { "before": "QVFI", "after": "QVFJ" } }
+}
